@@ -7,12 +7,12 @@ users:
 write_files:
 %{ if tls_key != "" ~}
   - path: /opt/postgres/pg.key
-    owner: ${postgres_user}:${postgres_user}
+    owner: ${postgres_uid}:${postgres_uid}
     permissions: "0400"
     content: |
       ${indent(6, tls_key)}
   - path: /opt/postgres/pg.pem
-    owner: ${postgres_user}:${postgres_user}
+    owner: ${postgres_uid}:${postgres_uid}
     permissions: "0400"
     content: |
       ${indent(6, tls_certificate)}

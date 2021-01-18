@@ -24,11 +24,12 @@ data "template_cloudinit_config" "postgres_config" {
                 user = var.postgres_user
                 password = local.postgres_password
                 database = var.postgres_database
+                tls_enabled = var.postgres_tls_key != ""
             }
         )
         tls_key = var.postgres_tls_key
         tls_certificate = var.postgres_tls_certificate
-        postgres_user = var.postgres_user
+        postgres_uid = var.postgres_uid
       }
     )
   }
