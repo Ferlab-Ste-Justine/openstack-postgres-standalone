@@ -57,3 +57,20 @@ variable "postgres_password" {
   default = ""
 }
 
+variable "postgres_tls_key" {
+  description = "Secret key if you want to connect to postgres over tls"
+  type = string
+  default = ""
+}
+
+variable "postgres_tls_certificate" {
+  description = "Public certificate if you want to connect to postgres over tls"
+  type = string
+  default = ""
+}
+
+variable "postgres_user" {
+  description = "User that postgres will run as. Mostly used if you want to enable tls. Should be a user id"
+  type = string
+  default = "999"
+}
