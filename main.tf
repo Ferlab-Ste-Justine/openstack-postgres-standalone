@@ -5,6 +5,7 @@ resource "random_string" "postgres_password" {
 
 locals {
   postgres_password = var.postgres_password != "" ? var.postgres_password : random_string.postgres_password.result
+  postgres_params = var.postgres_tls_key != "" ? "-c ssl=on -c ssl_cert_file=/opt/pg.pem -c ssl_key_file=/opt/pg.key ${var.postgres_params}" : var.postgres_params
 }
 
 data "template_cloudinit_config" "postgres_config" {
@@ -19,12 +20,16 @@ data "template_cloudinit_config" "postgres_config" {
             "${path.module}/templates/docker-compose.yml",
             {
                 image = var.postgres_image
-                params = var.postgres_params
+                params = local.postgres_params
                 user = var.postgres_user
                 password = local.postgres_password
                 database = var.postgres_database
+                tls_enabled = var.postgres_tls_key != ""
             }
         )
+        tls_key = var.postgres_tls_key
+        tls_certificate = var.postgres_tls_certificate
+        postgres_image = var.postgres_image
       }
     )
   }

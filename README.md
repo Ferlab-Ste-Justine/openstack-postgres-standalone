@@ -11,6 +11,7 @@ It is assumed that the postgres image used has the following characteristics (wh
 - The **POSTGRES_USER** environment variable indicates the user that will be used to access the database
 - The **POSTGRES_PASSWORD** environment variable indicates the password that will be used for authentication when accessing the database
 - The **POSTGRES_DB** environment variable indicates the name of the database that will be accessed
+- The image has a user named "postgres" and the database will run as that user
 
 # Usage
 
@@ -30,6 +31,12 @@ The module takes the following variables as input:
 - postgres_database: Name of the database that will be accessed
 - postgres_password: Password that will be used to access the database. If omitted, a random password is generated
 
+If you want to enable tls, you can pass the following variables as input:
+- postgres_tls_key: Valid tls key
+- postgres_tls_certificate: Valid tls certificate
+
+Note that if tls is enabled, the following arguments will be pre-fixed to **postgres_params**: ```-c ssl=on -c ssl_cert_file=/opt/pg.pem -c ssl_key_file=/opt/pg.key```
+
 ## Output
 
 The module outputs the following variables as output:
@@ -42,23 +49,6 @@ The module outputs the following variables as output:
 Here is an example of how the module might be used:
 
 ```
-#Pre-existing resources we depend on
-module "reference_infra" {
-  source = "./cqdg-reference-infra"
-}
-
-#Default image we assign to all vms
-module "ubuntu_bionic_image" {
-  source = "./image"
-  name = "Ubuntu-Bionic-2020-06-10"
-  url = "https://cloud-images.ubuntu.com/releases/bionic/release-20200610.1/ubuntu-18.04-server-cloudimg-amd64.img"
-}
-
-#Ssh key that will be used to open an ssh session from the bastion to other machines
-resource "openstack_compute_keypair_v2" "bastion_internal_keypair" {
-  name = "bastion_internal_keypair"
-}
-
 #Provision aidbox database
 module "postgres" {
   source = "git::https://github.com/Ferlab-Ste-Justine/openstack-postgres-standalone.git"
@@ -67,8 +57,10 @@ module "postgres" {
   flavor_id = module.reference_infra.flavors.micro.id
   keypair_name = openstack_compute_keypair_v2.bastion_internal_keypair.name
   network_name = module.reference_infra.networks.internal.name
-  postgres_image = "aidbox/db:11.1.0"
-  postgres_user = "postgres"
-  postgres_database = "devbox"
+  postgres_image = "postgres:12.3"
+  postgres_user = "someadmin"
+  postgres_database = "somedb"
+  postgres_tls_key = tls_private_key.pg.private_key_pem
+  postgres_tls_certificate = tls_locally_signed_cert.pg.cert_pem
 }
 ```
