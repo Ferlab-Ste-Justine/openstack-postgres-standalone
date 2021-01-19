@@ -7,12 +7,12 @@ users:
 write_files:
 %{ if tls_key != "" ~}
   - path: /opt/postgres/pg.key
-    owner: ${postgres_uid}:${postgres_uid}
+    owner: root:root
     permissions: "0400"
     content: |
       ${indent(6, tls_key)}
   - path: /opt/postgres/pg.pem
-    owner: ${postgres_uid}:${postgres_uid}
+    owner: root:root
     permissions: "0400"
     content: |
       ${indent(6, tls_certificate)}
@@ -48,6 +48,10 @@ packages:
   - gnupg-agent
   - software-properties-common
 runcmd:
+%{ if tls_key != "" ~}
+  - chown ${postgres_uid}:${postgres_uid} /opt/postgres/pg.key
+  - chown ${postgres_uid}:${postgres_uid} /opt/postgres/pg.pem
+%{ endif ~}
   #Install postgres as a background docker container
   - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
   - add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
