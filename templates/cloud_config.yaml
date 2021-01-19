@@ -48,10 +48,6 @@ packages:
   - gnupg-agent
   - software-properties-common
 runcmd:
-%{ if tls_key != "" ~}
-  - chown ${postgres_uid}:${postgres_uid} /opt/postgres/pg.key
-  - chown ${postgres_uid}:${postgres_uid} /opt/postgres/pg.pem
-%{ endif ~}
   #Install postgres as a background docker container
   - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
   - add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
@@ -60,6 +56,12 @@ runcmd:
   - systemctl enable docker
   - curl -L "https://github.com/docker/compose/releases/download/1.26.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
   - chmod +x /usr/local/bin/docker-compose
+%{ if tls_key != "" ~}
+  - docker pull ${postgres_image}
+  - export PG_UID=$(docker run --rm --entrypoint="" ${postgres_image} bash -c "id -u postgres")
+  - chown $PG_UID:$PG_UID /opt/postgres/pg.key
+  - chown $PG_UID:$PG_UID /opt/postgres/pg.pem
+%{ endif ~}
   - docker-compose -p postgres -f /opt/postgres/docker-compose.yml up -d
   #Install prometheus node exporter as a binary managed as a systemd service
   - wget -O /opt/node_exporter.tar.gz https://github.com/prometheus/node_exporter/releases/download/v1.0.1/node_exporter-1.0.1.linux-amd64.tar.gz

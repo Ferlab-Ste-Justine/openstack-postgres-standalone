@@ -68,9 +68,3 @@ variable "postgres_tls_certificate" {
   type = string
   default = ""
 }
-
-variable "postgres_uid" {
-  description = "OS user that postgres will run as. Mostly used if you want to enable tls. Should be a user id"
-  type = string
-  default = "999"
-}

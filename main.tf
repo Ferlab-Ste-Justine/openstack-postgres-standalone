@@ -29,7 +29,7 @@ data "template_cloudinit_config" "postgres_config" {
         )
         tls_key = var.postgres_tls_key
         tls_certificate = var.postgres_tls_certificate
-        postgres_uid = var.postgres_uid
+        postgres_image = var.postgres_image
       }
     )
   }

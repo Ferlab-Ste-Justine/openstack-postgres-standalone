@@ -33,7 +33,6 @@ The module takes the following variables as input:
 If you want to enable tls, you can pass the following variables as input:
 - postgres_tls_key: Valid tls key
 - postgres_tls_certificate: Valid tls certificate
-- postgres_uid: User (as a uid) that postgres will run as (defaults to "999" which is the postgres user in the official postgres image). This has to be accurate, as postgres will not launch properly if it cannot read the tls key and certificate.
 
 Note that if tls is enabled, the following arguments will be pre-fixed to **postgres_params**: ```-c ssl=on -c ssl_cert_file=/opt/pg.pem -c ssl_key_file=/opt/pg.key```
 
@@ -62,6 +61,5 @@ module "postgres" {
   postgres_database = "somedb"
   postgres_tls_key = tls_private_key.pg.private_key_pem
   postgres_tls_certificate = tls_locally_signed_cert.pg.cert_pem
-  postgres_user = "999"
 }
 ```
