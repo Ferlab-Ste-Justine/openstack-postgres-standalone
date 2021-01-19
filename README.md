@@ -11,6 +11,7 @@ It is assumed that the postgres image used has the following characteristics (wh
 - The **POSTGRES_USER** environment variable indicates the user that will be used to access the database
 - The **POSTGRES_PASSWORD** environment variable indicates the password that will be used for authentication when accessing the database
 - The **POSTGRES_DB** environment variable indicates the name of the database that will be accessed
+- The image has a user named "postgres" and the database will run as that user
 
 # Usage
 
