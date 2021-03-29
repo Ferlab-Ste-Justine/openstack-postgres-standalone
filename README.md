@@ -4,6 +4,12 @@ This package is a terraform module to provision a standalone postgres instance, 
 
 Postgres will run on a background container set to always restart.
 
+The postgres instance will run over tls and expect to receive the credentials of a certificate authority (can be self-signed) to sign its credentials.
+
+Additionally, security groups are generated with this module and the following security groups are returned as output by the module: client, bastion.
+
+Any machine wishing to connect to the postgres server (as a postgres or ssh client) will need to have the corresponding security groups assigned to it.
+
 It is assumed that the postgres image used has the following characteristics (which the official postgres images will have):
 
 - The container command is passed as parameters to the **postgres** entrypoint
