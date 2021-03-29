@@ -63,7 +63,7 @@ variable "domain" {
 
 variable "additional_domains" {
   description = "Additional domains of the database, which will be used for the certificate"
-  type = string
+  type = list(string)
 }
 
 variable "organization" {
