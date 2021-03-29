@@ -5,7 +5,7 @@ resource "random_string" "postgres_password" {
 
 locals {
   postgres_password = var.postgres_password != "" ? var.postgres_password : random_string.postgres_password.result
-  postgres_params = var.postgres_tls_key != "" ? "-c ssl=on -c ssl_cert_file=/opt/pg.pem -c ssl_key_file=/opt/pg.key ${var.postgres_params}" : var.postgres_params
+  postgres_params = "-c ssl=on -c ssl_cert_file=/opt/pg.pem -c ssl_key_file=/opt/pg.key ${var.postgres_params}"
 }
 
 data "template_cloudinit_config" "postgres_config" {
@@ -37,7 +37,7 @@ data "template_cloudinit_config" "postgres_config" {
 resource "openstack_networking_port_v2" "postgres" {
   name           = var.namespace == "" ? "postgres" : "postgres-${var.namespace}"
   network_id     = var.network_id
-  security_group_ids = var.security_group_ids
+  security_group_ids = [openstack_networking_secgroup_v2.postgres_server.id]
   admin_state_up = true
 }
 

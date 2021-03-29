@@ -14,11 +14,6 @@ variable "flavor_id" {
   type = string
 }
 
-variable "security_group_ids" {
-  description = "Security groups of the node"
-  type = list(string)
-}
-
 variable "network_id" {
   description = "Id of the network the node will be attached to"
   type = string

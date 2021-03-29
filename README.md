@@ -38,19 +38,20 @@ The following input variables are also required for postgres' certificate for tl
 - domain: Dns name the database will be accessed under
 - additional_domains: Additional dns names for the database
 
-
-Note that if tls is enabled, the following arguments will be pre-fixed to **postgres_params**: ```-c ssl=on -c ssl_cert_file=/opt/pg.pem -c ssl_key_file=/opt/pg.key```
+The following arguments will be pre-fixed to **postgres_params**: ```-c ssl=on -c ssl_cert_file=/opt/pg.pem -c ssl_key_file=/opt/pg.key```
 
 ## Output
 
 The module outputs the following variables as output:
 - id: ID of the postgres vm
 - ip: Ip of the postgres vm on the network it was assigned to
-- db_password: Database password used to authenticate against the postgres database
+- db_password: Database password used to authenticate 
+against the postgres database
+- groups: Is a map with the following 2 keys: client, bastion. Each is a resource of type **openstack_networking_secgroup_v2** that allows to connect to the postgres server as a postgres client and a bastion respectively
 
 ## Example
 
-Here is an example of how the module might be used:
+Here is an example of how the module might be used: 
 
 ```
 resource "tls_private_key" "ca" {
@@ -80,7 +81,7 @@ resource "tls_self_signed_cert" "ca" {
 
 module "postgres" {
   source = "git::https://github.com/Ferlab-Ste-Justine/openstack-postgres-standalone.git"
-  namespace = "aidbox"
+  namespace = "qa"
   image_id = module.ubuntu_bionic_image.id
   flavor_id = module.reference_infra.flavors.micro.id
   keypair_name = openstack_compute_keypair_v2.bastion_internal_keypair.name

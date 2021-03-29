@@ -9,3 +9,10 @@ output ip {
 output db_password {
   value = local.postgres_password
 }
+
+output "groups" {
+  value = {
+    client = openstack_networking_secgroup_v2.postgres_client
+    bastion = openstack_networking_secgroup_v2.postgres_bastion
+  }
+}

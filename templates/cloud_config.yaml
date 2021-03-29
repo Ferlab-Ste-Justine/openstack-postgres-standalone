@@ -5,7 +5,6 @@ users:
     system: true
     lock_passwd: true
 write_files:
-%{ if tls_key != "" ~}
   - path: /opt/postgres/pg.key
     owner: root:root
     permissions: "0400"
@@ -16,7 +15,6 @@ write_files:
     permissions: "0400"
     content: |
       ${indent(6, tls_certificate)}
-%{ endif ~}
   #Postgres configuration
   - path: /opt/postgres/docker-compose.yml
     owner: root:root
@@ -56,12 +54,10 @@ runcmd:
   - systemctl enable docker
   - curl -L "https://github.com/docker/compose/releases/download/1.26.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
   - chmod +x /usr/local/bin/docker-compose
-%{ if tls_key != "" ~}
   - docker pull ${postgres_image}
   - export PG_UID=$(docker run --rm --entrypoint="" ${postgres_image} bash -c "id -u postgres")
   - chown $PG_UID:$PG_UID /opt/postgres/pg.key
   - chown $PG_UID:$PG_UID /opt/postgres/pg.pem
-%{ endif ~}
   - docker-compose -p postgres -f /opt/postgres/docker-compose.yml up -d
   #Install prometheus node exporter as a binary managed as a systemd service
   - wget -O /opt/node_exporter.tar.gz https://github.com/prometheus/node_exporter/releases/download/v1.0.1/node_exporter-1.0.1.linux-amd64.tar.gz
