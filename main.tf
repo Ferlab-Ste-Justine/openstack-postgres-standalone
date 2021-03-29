@@ -24,15 +24,21 @@ data "template_cloudinit_config" "postgres_config" {
                 user = var.postgres_user
                 password = local.postgres_password
                 database = var.postgres_database
-                tls_enabled = var.postgres_tls_key != ""
             }
         )
-        tls_key = var.postgres_tls_key
-        tls_certificate = var.postgres_tls_certificate
+        tls_key = tls_private_key.key.private_key_pem
+        tls_certificate = "${tls_locally_signed_cert.certificate.cert_pem}\n${var.ca.certificate}"
         postgres_image = var.postgres_image
       }
     )
   }
+}
+
+resource "openstack_networking_port_v2" "postgres" {
+  name           = var.namespace == "" ? "postgres" : "postgres-${var.namespace}"
+  network_id     = var.network_id
+  security_group_ids = var.security_group_ids
+  admin_state_up = true
 }
 
 resource "openstack_compute_instance_v2" "postgres" {
@@ -40,10 +46,9 @@ resource "openstack_compute_instance_v2" "postgres" {
   image_id        = var.image_id
   flavor_id       = var.flavor_id
   key_pair        = var.keypair_name
-  security_groups = var.security_groups
   user_data = data.template_cloudinit_config.postgres_config.rendered
 
   network {
-    name = var.network_name
+    port = openstack_networking_port_v2.postgres.id
   }
 }

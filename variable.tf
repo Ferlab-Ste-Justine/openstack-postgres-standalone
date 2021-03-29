@@ -14,14 +14,13 @@ variable "flavor_id" {
   type = string
 }
 
-variable "security_groups" {
+variable "security_group_ids" {
   description = "Security groups of the node"
   type = list(string)
-  default = ["default"]
 }
 
-variable "network_name" {
-  description = "Name of the network the node will be attached to"
+variable "network_id" {
+  description = "Id of the network the node will be attached to"
   type = string
 }
 
@@ -57,14 +56,41 @@ variable "postgres_password" {
   default = ""
 }
 
-variable "postgres_tls_key" {
-  description = "Secret key if you want to connect to postgres over tls"
-  type = string
-  default = ""
+variable "ca" {
+  description = "The ca that will sign the db's certificate. Should have the following keys: key, key_algorithm, certificate"
+  type = any
 }
 
-variable "postgres_tls_certificate" {
-  description = "Public certificate if you want to connect to postgres over tls"
+variable "domain" {
+  description = "Domain of the database, which will be used for the certificate"
   type = string
-  default = ""
+}
+
+variable "additional_domains" {
+  description = "Additional domains of the database, which will be used for the certificate"
+  type = string
+}
+
+variable "organization" {
+  description = "The etcd cluster's certificates' organization"
+  type = string
+  default = "Ferlab"
+}
+
+variable "certificate_validity_period" {
+  description = "The etcd cluster's certificate's validity period in hours"
+  type = number
+  default = 100*365*24
+}
+
+variable "certificate_early_renewal_period" {
+  description = "The etcd cluster's certificate's early renewal period in hours"
+  type = number
+  default = 99*365*24
+}
+
+variable "key_length" {
+  description = "The key length of the certificate's private key"
+  type = number
+  default = 4096
 }

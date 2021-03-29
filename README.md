@@ -21,9 +21,8 @@ The module takes the following variables as input:
 
 - namespace: A string to namespace all the postgres vm name (ie, `postgres-<namespace>`). If this variable is omitted, a namespace suffix will not be added.
 - flavor_id: The id of the vm flavor the postgres node will have.
-- security_groups: List of security groups to assign to the postgres node. Defaults to `["default"]`
 - image_id: ID of the vm image to use to provision the postgres node on
-- network_name: Name of the network to connect the postgres node
+- network_id: Id of the network to connect the postgres node
 - keypair_name: Name of the keypair that will be used to ssh on the postgres node
 - postgres_image: Docker image to launch the postgres container with
 - postgres_params: Additional command line parameters to pass to postgres when launching it
@@ -31,9 +30,14 @@ The module takes the following variables as input:
 - postgres_database: Name of the database that will be accessed
 - postgres_password: Password that will be used to access the database. If omitted, a random password is generated
 
-If you want to enable tls, you can pass the following variables as input:
-- postgres_tls_key: Valid tls key
-- postgres_tls_certificate: Valid tls certificate
+The following input variables are also required for postgres' certificate for tls communication:
+- key_length: Length of the certificate's RSA key (defaults to 4096)
+- certificate_validity_period: How long it takes for the certificate to expire in hours (defaults to 100 years)
+- certificate_early_renewal_period: How long Terraform should wait before reprovisioning the certificate (defaults to 99 years)
+- organization: Organization the certificate is for (defaults to "ferlab")
+- domain: Dns name the database will be accessed under
+- additional_domains: Additional dns names for the database
+
 
 Note that if tls is enabled, the following arguments will be pre-fixed to **postgres_params**: ```-c ssl=on -c ssl_cert_file=/opt/pg.pem -c ssl_key_file=/opt/pg.key```
 
@@ -49,18 +53,45 @@ The module outputs the following variables as output:
 Here is an example of how the module might be used:
 
 ```
-#Provision aidbox database
+resource "tls_private_key" "ca" {
+  algorithm   = "RSA"
+  rsa_bits = 4096
+}
+
+resource "tls_self_signed_cert" "ca" {
+  key_algorithm   = tls_private_key.ca.algorithm
+  private_key_pem = tls_private_key.ca.private_key_pem
+
+  subject {
+    common_name  = "myca"
+  }
+
+  validity_period_hours = 100*365*24
+  early_renewal_hours = 99*365*24
+
+  allowed_uses = [
+    "digital_signature",
+    "key_encipherment",
+    "cert_signing",
+  ]
+
+  is_ca_certificate = true
+}
+
 module "postgres" {
   source = "git::https://github.com/Ferlab-Ste-Justine/openstack-postgres-standalone.git"
   namespace = "aidbox"
   image_id = module.ubuntu_bionic_image.id
   flavor_id = module.reference_infra.flavors.micro.id
   keypair_name = openstack_compute_keypair_v2.bastion_internal_keypair.name
-  network_name = module.reference_infra.networks.internal.name
+  network_id = module.reference_infra.networks.internal.id
   postgres_image = "postgres:12.3"
   postgres_user = "someadmin"
   postgres_database = "somedb"
-  postgres_tls_key = tls_private_key.pg.private_key_pem
-  postgres_tls_certificate = tls_locally_signed_cert.pg.cert_pem
+  ca = {
+    key = tls_private_key.ca.private_key_pem
+    key_algorithm = tls_private_key.ca.algorithm
+    certificate = tls_self_signed_cert.ca.cert_pem
+  }
 }
 ```

@@ -3,7 +3,7 @@ output id {
 }
 
 output ip {
-  value = openstack_compute_instance_v2.postgres.network.0.fixed_ip_v4
+  value = openstack_networking_port_v2.postgres.all_fixed_ips.0
 }
 
 output db_password {
