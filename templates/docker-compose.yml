@@ -6,10 +6,8 @@ services:
     network_mode: "host"
     volumes:
       - "/data:/data"
-%{ if tls_enabled != "" ~}
       - "/opt/postgres/pg.key:/opt/pg.key"
       - "/opt/postgres/pg.pem:/opt/pg.pem"
-%{ endif ~}
 %{ if params != "" ~}
     command: ${params}
 %{ endif ~}
