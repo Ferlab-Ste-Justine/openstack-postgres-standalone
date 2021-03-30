@@ -8,6 +8,7 @@ output ip {
 
 output db_password {
   value = local.postgres_password
+  sensitive = true
 }
 
 output "groups" {
