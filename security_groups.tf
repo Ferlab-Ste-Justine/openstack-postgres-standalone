@@ -6,13 +6,13 @@ resource "openstack_networking_secgroup_v2" "postgres_server" {
 }
 
 resource "openstack_networking_secgroup_v2" "postgres_client" {
-  name                 = "postgres-${var.namespace}-client"
+  name                 = "postgres-client-${var.namespace}"
   description          = "Security group for the clients connecting to postgres server"
   delete_default_rules = true
 }
 
 resource "openstack_networking_secgroup_v2" "postgres_bastion" {
-  name                 = "postgres-${var.namespace}-bastion"
+  name                 = "postgres-bastion-${var.namespace}"
   description          = "Security group for the bastion connecting to etcd members"
   delete_default_rules = true
 }
