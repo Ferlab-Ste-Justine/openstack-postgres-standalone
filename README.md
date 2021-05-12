@@ -25,34 +25,35 @@ It is assumed that the postgres image used has the following characteristics (wh
 
 The module takes the following variables as input:
 
-- namespace: A string to namespace all the postgres vm name (ie, `postgres-<namespace>`). If this variable is omitted, a namespace suffix will not be added.
-- flavor_id: The id of the vm flavor the postgres node will have.
-- image_id: ID of the vm image to use to provision the postgres node on
-- network_id: Id of the network to connect the postgres node
-- keypair_name: Name of the keypair that will be used to ssh on the postgres node
-- postgres_image: Docker image to launch the postgres container with
-- postgres_params: Additional command line parameters to pass to postgres when launching it
-- postgres_user: User that will be used to access the database
-- postgres_database: Name of the database that will be accessed
-- postgres_password: Password that will be used to access the database. If omitted, a random password is generated
+- **namespace**: A string to namespace all the postgres vm name (ie, `postgres-<namespace>`). If this variable is omitted, a namespace suffix will not be added.
+- **flavor_id**: The id of the vm flavor the postgres node will have.
+- **image_id**: ID of the vm image to use to provision the postgres node on
+- **network_id**: Id of the network to connect the postgres node
+- **keypair_name**: Name of the keypair that will be used to ssh on the postgres node
+- **postgres_image**: Docker image to launch the postgres container with
+- **postgres_params**: Additional command line parameters to pass to postgres when launching it
+- **postgres_user**: User that will be used to access the database
+- **postgres_database**: Name of the database that will be accessed
+- **postgres_password**: Password that will be used to access the database. If omitted, a random password is generated
 
 The following input variables are also required for postgres' certificate for tls communication:
-- key_length: Length of the certificate's RSA key (defaults to 4096)
-- certificate_validity_period: How long it takes for the certificate to expire in hours (defaults to 100 years)
-- certificate_early_renewal_period: How long Terraform should wait before reprovisioning the certificate (defaults to 99 years)
-- organization: Organization the certificate is for (defaults to "ferlab")
-- domains: Dns names the database will be accessed under
+- **key_length**: Length of the certificate's RSA key (defaults to 4096)
+- **certificate_validity_period**: How long it takes for the certificate to expire in hours (defaults to 100 years)
+- **certificate_early_renewal_period**: How long Terraform should wait before reprovisioning the certificate (defaults to 99 years)
+- **organization**: Organization the certificate is for (defaults to "ferlab")
+- **domains**: Dns names the database will be accessed under
+- **ca**: The certificate authority that will sign the db's certificate. Should have the following keys: key, key_algorithm, certificate
 
 The following arguments will be pre-fixed to **postgres_params**: ```-c ssl=on -c ssl_cert_file=/opt/pg.pem -c ssl_key_file=/opt/pg.key```
 
 ## Output
 
 The module outputs the following variables as output:
-- id: ID of the postgres vm
-- ip: Ip of the postgres vm on the network it was assigned to
-- db_password: Database password used to authenticate 
+- **id**: ID of the postgres vm
+- **ip**: Ip of the postgres vm on the network it was assigned to
+- **db_password**: Database password used to authenticate 
 against the postgres database
-- groups: Is a map with the following 2 keys: client, bastion. Each is a resource of type **openstack_networking_secgroup_v2** that allows to connect to the postgres server as a postgres client and a bastion respectively
+- **groups**: Is a map with the following 2 keys: client, bastion. Each is a resource of type **openstack_networking_secgroup_v2** that allows to connect to the postgres server as a postgres client and a bastion respectively
 
 ## Example
 
@@ -94,6 +95,7 @@ module "postgres" {
   postgres_image = "postgres:12.3"
   postgres_user = "someadmin"
   postgres_database = "somedb"
+  domains = ["postgres-qa"]
   ca = {
     key = tls_private_key.ca.private_key_pem
     key_algorithm = tls_private_key.ca.algorithm
