@@ -41,8 +41,7 @@ The following input variables are also required for postgres' certificate for tl
 - certificate_validity_period: How long it takes for the certificate to expire in hours (defaults to 100 years)
 - certificate_early_renewal_period: How long Terraform should wait before reprovisioning the certificate (defaults to 99 years)
 - organization: Organization the certificate is for (defaults to "ferlab")
-- domain: Dns name the database will be accessed under
-- additional_domains: Additional dns names for the database
+- domains: Dns names the database will be accessed under
 
 The following arguments will be pre-fixed to **postgres_params**: ```-c ssl=on -c ssl_cert_file=/opt/pg.pem -c ssl_key_file=/opt/pg.key```
 
