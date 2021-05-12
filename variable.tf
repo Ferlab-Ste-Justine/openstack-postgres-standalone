@@ -58,7 +58,7 @@ variable "ca" {
 
 variable "domains" {
   description = "Domains of the database, which will be used for the certificate"
-  type = string
+  type = list(string)
 }
 
 variable "organization" {
