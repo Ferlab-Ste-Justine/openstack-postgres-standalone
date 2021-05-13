@@ -56,13 +56,8 @@ variable "ca" {
   type = any
 }
 
-variable "domain" {
-  description = "Domain of the database, which will be used for the certificate"
-  type = string
-}
-
-variable "additional_domains" {
-  description = "Additional domains of the database, which will be used for the certificate"
+variable "domains" {
+  description = "Domains of the database, which will be used for the certificate"
   type = list(string)
 }
 

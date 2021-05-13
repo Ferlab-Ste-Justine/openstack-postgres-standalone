@@ -8,11 +8,11 @@ resource "tls_cert_request" "request" {
   private_key_pem = tls_private_key.key.private_key_pem
 
   subject {
-    common_name  = var.domain
+    common_name  = "postgres"
     organization = var.organization
   }
 
-  dns_names = var.additional_domains
+  dns_names = var.domains
   ip_addresses = [openstack_networking_port_v2.postgres.all_fixed_ips.0]
 }
 
