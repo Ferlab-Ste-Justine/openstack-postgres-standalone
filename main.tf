@@ -51,4 +51,10 @@ resource "openstack_compute_instance_v2" "postgres" {
   network {
     port = openstack_networking_port_v2.postgres.id
   }
+
+  lifecycle {
+    ignore_changes = [
+      user_data,
+    ]
+  }
 }

@@ -103,3 +103,14 @@ module "postgres" {
   }
 }
 ```
+
+# Gotcha
+
+To safeguard against potential outages and loss of data, changes to the server's user data will be ignored without reprovisioning.
+
+To reprovision a new instance with changes to the following parameters, the module should be explicitly deleted and re-created:
+- postgres_image
+- postgres_params
+- postgres_user
+- postgres_password
+- postgres_database
