@@ -4,9 +4,12 @@ variable "namespace" {
   default = ""
 }
 
-variable "image_id" {
-    description = "ID of the vm image used to provision the node"
-    type = string
+variable "image_source" {
+  description = "Source of the vm's image"
+  type = object({
+    image_id = string
+    volume_id = string
+  })
 }
 
 variable "flavor_id" {

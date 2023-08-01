@@ -27,7 +27,9 @@ The module takes the following variables as input:
 
 - **namespace**: A string to namespace all the postgres vm name (ie, `postgres-<namespace>`). If this variable is omitted, a namespace suffix will not be added.
 - **flavor_id**: The id of the vm flavor the postgres node will have.
-- **image_id**: ID of the vm image to use to provision the postgres node on
+- **image_source**: Source of the image to provision the postgres node on. It takes the following keys (only one of the two fields should be used, the other one should be empty):
+  - **image_id**: Id of the image to associate with a vm that has local storage
+  - **volume_id**: Id of a volume containing the os to associate with the vm
 - **network_id**: Id of the network to connect the postgres node
 - **keypair_name**: Name of the keypair that will be used to ssh on the postgres node
 - **postgres_image**: Docker image to launch the postgres container with
@@ -88,7 +90,10 @@ resource "tls_self_signed_cert" "ca" {
 module "postgres" {
   source = "git::https://github.com/Ferlab-Ste-Justine/openstack-postgres-standalone.git"
   namespace = "qa"
-  image_id = module.ubuntu_bionic_image.id
+  image_source = {
+    image_id = module.ubuntu_bionic_image.id
+    volume_id = ""
+  }
   flavor_id = module.reference_infra.flavors.micro.id
   keypair_name = openstack_compute_keypair_v2.bastion_internal_keypair.name
   network_id = module.reference_infra.networks.internal.id

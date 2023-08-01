@@ -6,6 +6,13 @@ resource "random_string" "postgres_password" {
 locals {
   postgres_password = var.postgres_password != "" ? var.postgres_password : random_string.postgres_password.result
   postgres_params = "-c ssl=on -c ssl_cert_file=/opt/pg.pem -c ssl_key_file=/opt/pg.key ${var.postgres_params}"
+  block_devices = var.image_source.volume_id != "" ? [{
+    uuid                  = var.image_source.volume_id
+    source_type           = "volume"
+    boot_index            = 0
+    destination_type      = "volume"
+    delete_on_termination = false
+  }] : []
 }
 
 data "template_cloudinit_config" "postgres_config" {
@@ -43,13 +50,24 @@ resource "openstack_networking_port_v2" "postgres" {
 
 resource "openstack_compute_instance_v2" "postgres" {
   name            = var.namespace == "" ? "postgres" : "postgres-${var.namespace}"
-  image_id        = var.image_id
+  image_id        = var.image_source.image_id != "" ? var.image_source.image_id : null
   flavor_id       = var.flavor_id
   key_pair        = var.keypair_name
   user_data = data.template_cloudinit_config.postgres_config.rendered
 
   network {
     port = openstack_networking_port_v2.postgres.id
+  }
+
+  dynamic "block_device" {
+    for_each = local.block_devices
+    content {
+      uuid                  = block_device.value["uuid"]
+      source_type           = block_device.value["source_type"]
+      boot_index            = block_device.value["boot_index"]
+      destination_type      = block_device.value["destination_type"]
+      delete_on_termination = block_device.value["delete_on_termination"]
+    }
   }
 
   lifecycle {
