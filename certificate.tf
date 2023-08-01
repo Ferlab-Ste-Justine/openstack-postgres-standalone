@@ -17,7 +17,6 @@ resource "tls_cert_request" "request" {
 
 resource "tls_locally_signed_cert" "certificate" {
   cert_request_pem   = tls_cert_request.request.cert_request_pem
-  ca_key_algorithm   = var.ca.key_algorithm
   ca_private_key_pem = var.ca.key
   ca_cert_pem        = var.ca.certificate
 
