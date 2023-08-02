@@ -1,5 +1,5 @@
-variable "namespace" {
-  description = "Namespace to create the resources under"
+variable "name" {
+  description = "Name of the vm"
   type = string
   default = ""
 }

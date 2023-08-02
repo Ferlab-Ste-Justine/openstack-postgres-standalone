@@ -42,14 +42,14 @@ data "template_cloudinit_config" "postgres_config" {
 }
 
 resource "openstack_networking_port_v2" "postgres" {
-  name           = var.namespace == "" ? "postgres" : "postgres-${var.namespace}"
+  name           = var.name
   network_id     = var.network_id
   security_group_ids = [openstack_networking_secgroup_v2.postgres_server.id]
   admin_state_up = true
 }
 
 resource "openstack_compute_instance_v2" "postgres" {
-  name            = var.namespace == "" ? "postgres" : "postgres-${var.namespace}"
+  name            = var.name
   image_id        = var.image_source.image_id != "" ? var.image_source.image_id : null
   flavor_id       = var.flavor_id
   key_pair        = var.keypair_name
