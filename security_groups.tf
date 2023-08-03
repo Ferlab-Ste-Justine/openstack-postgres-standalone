@@ -13,7 +13,7 @@ resource "openstack_networking_secgroup_v2" "postgres_client" {
 
 resource "openstack_networking_secgroup_v2" "postgres_bastion" {
   name                 = "${var.name}-bastion"
-  description          = "Security group for the bastion connecting to etcd members"
+  description          = "Security group for the bastion connecting to postgres server"
   delete_default_rules = true
 }
 
