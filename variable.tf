@@ -1,5 +1,5 @@
 variable "name" {
-  description = "Name of the vm"
+  description = "Name to give to the vm, its port and the prefix of security groups"
   type = string
   default = ""
 }
@@ -25,6 +25,12 @@ variable "network_id" {
 variable "keypair_name" {
   description = "Name of the keypair that will be used to ssh to the node"
   type = string
+}
+
+variable "extra_security_group_ids" {
+  description = "List of extra security groups to assign beyond those already assigned by the module"
+  type = list(string)
+  default = []
 }
 
 variable "postgres_image" {

@@ -25,13 +25,14 @@ It is assumed that the postgres image used has the following characteristics (wh
 
 The module takes the following variables as input:
 
-- **name**: Name to give to the vm.
+- **name**: Name to give to the vm, its port and the prefix of security groups
 - **image_source**: Source of the image to provision the postgres node on. It takes the following keys (only one of the two fields should be used, the other one should be empty):
   - **image_id**: Id of the image to associate with a vm that has local storage
   - **volume_id**: Id of a volume containing the os to associate with the vm
 - **flavor_id**: The id of the vm flavor the postgres node will have.
 - **network_id**: Id of the network to connect the postgres node
 - **keypair_name**: Name of the keypair that will be used to ssh on the postgres node
+- **extra_security_group_ids**: List of extra security groups to assign beyond those already assigned by the module. Defaults to `[]`
 - **postgres_image**: Docker image to launch the postgres container with
 - **postgres_params**: Additional command line parameters to pass to postgres when launching it
 - **postgres_user**: User that will be used to access the database
