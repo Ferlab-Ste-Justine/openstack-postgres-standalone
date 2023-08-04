@@ -45,7 +45,7 @@ data "template_cloudinit_config" "postgres_config" {
 resource "openstack_networking_port_v2" "postgres" {
   name               = var.name
   network_id         = var.network_id
-  security_group_ids = concat(var.extra_security_group_ids, [openstack_networking_secgroup_v2.postgres_server.id])
+  security_group_ids = [openstack_networking_secgroup_v2.postgres_server.id]
   admin_state_up     = true
 }
 

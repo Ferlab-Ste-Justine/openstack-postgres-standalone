@@ -32,7 +32,7 @@ The module takes the following variables as input:
 - **flavor_id**: The id of the vm flavor the postgres node will have.
 - **network_id**: Id of the network to connect the postgres node
 - **keypair_name**: Name of the keypair that will be used to ssh on the postgres node
-- **extra_security_group_ids**: List of extra security groups to assign beyond the one already assigned by the module (defaults to `[]`)
+- **bastion_security_group_id**: Id of pre-existing security group to add bastion rules to (defaults to "")
 - **postgres_image**: Docker image to launch the postgres container with
 - **postgres_params**: Additional command line parameters to pass to postgres when launching it
 - **postgres_data**: Path where to store the configuration and data files (defaults to `/data`)

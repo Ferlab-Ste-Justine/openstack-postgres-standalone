@@ -27,10 +27,10 @@ variable "keypair_name" {
   type = string
 }
 
-variable "extra_security_group_ids" {
-  description = "List of extra security groups to assign beyond the one already assigned by the module"
-  type = list(string)
-  default = []
+variable "bastion_security_group_id" {
+  description = "Id of pre-existing security group to add bastion rules to"
+  type = string
+  default = ""
 }
 
 variable "postgres_image" {
