@@ -28,7 +28,7 @@ variable "keypair_name" {
 }
 
 variable "extra_security_group_ids" {
-  description = "List of extra security groups to assign beyond those already assigned by the module"
+  description = "List of extra security groups to assign beyond the one already assigned by the module"
   type = list(string)
   default = []
 }

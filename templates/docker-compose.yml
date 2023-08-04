@@ -5,7 +5,7 @@ services:
     restart: always
     network_mode: "host"
     volumes:
-      - "/data:/data"
+      - "${data}:${data}"
       - "/opt/postgres/pg.key:/opt/pg.key"
       - "/opt/postgres/pg.pem:/opt/pg.pem"
 %{ if params != "" ~}
