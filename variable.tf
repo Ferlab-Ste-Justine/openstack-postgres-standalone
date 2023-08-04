@@ -44,6 +44,12 @@ variable "postgres_params" {
   default = ""
 }
 
+variable "postgres_data" {
+  description = "Path where to store the configuration and data files"
+  type = string
+  default = "/data"
+}
+
 variable "postgres_user" {
   description = "User that will access the database"
   type = string

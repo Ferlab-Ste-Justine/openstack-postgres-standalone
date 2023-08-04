@@ -28,6 +28,7 @@ data "template_cloudinit_config" "postgres_config" {
             {
                 image = var.postgres_image
                 params = local.postgres_params
+                data = var.postgres_data
                 user = var.postgres_user
                 password = local.postgres_password
                 database = var.postgres_database

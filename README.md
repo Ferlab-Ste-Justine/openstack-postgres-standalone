@@ -35,6 +35,7 @@ The module takes the following variables as input:
 - **extra_security_group_ids**: List of extra security groups to assign beyond those already assigned by the module. Defaults to `[]`
 - **postgres_image**: Docker image to launch the postgres container with
 - **postgres_params**: Additional command line parameters to pass to postgres when launching it
+- **postgres_data**: Path where to store the configuration and data files
 - **postgres_user**: User that will be used to access the database
 - **postgres_database**: Name of the database that will be accessed
 - **postgres_password**: Password that will be used to access the database. If omitted, a random password is generated
@@ -117,6 +118,7 @@ To safeguard against potential outages and loss of data, changes to the server's
 To reprovision a new instance with changes to the following parameters, the module should be explicitly deleted and re-created:
 - postgres_image
 - postgres_params
+- postgres_data
 - postgres_user
 - postgres_password
 - postgres_database
