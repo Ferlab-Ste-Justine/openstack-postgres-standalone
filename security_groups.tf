@@ -17,7 +17,7 @@ resource "openstack_networking_secgroup_v2" "postgres_bastion" {
 }
 
 locals {
-  bastion_group_ids = [openstack_networking_secgroup_v2.postgres_bastion.id, var.bastion_security_group_id]
+  bastion_group_ids = var.bastion_security_group_id != "" ? [var.bastion_security_group_id, openstack_networking_secgroup_v2.postgres_bastion.id] : [openstack_networking_secgroup_v2.postgres_bastion.id]
 }
 
 //Allow all outbound traffic for server and bastion
