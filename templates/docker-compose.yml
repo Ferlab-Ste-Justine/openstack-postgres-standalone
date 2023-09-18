@@ -16,3 +16,13 @@ services:
       POSTGRES_USER:     "${user}"
       POSTGRES_PASSWORD: "${password}"
       POSTGRES_DB:       "${database}"
+%{ if fluentd.enabled ~}
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: 127.0.0.1:${fluentd.port}
+        fluentd-retry-wait: 1s
+        fluentd-max-retries: 3600
+        fluentd-sub-second-precision: true
+        tag: ${fluentd.tag}
+%{ endif ~}

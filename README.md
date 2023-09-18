@@ -39,6 +39,19 @@ The module takes the following variables as input:
 - **postgres_user**: User that will be used to access the database
 - **postgres_database**: Name of the database that will be accessed
 - **postgres_password**: Password that will be used to access the database. If omitted, a random password is generated
+- **fluentd**: Optional fluentd configuration to securely route logs to a fluentd node using the forward plugin. It has the following keys:
+  - **enabled**: If set to false (the default), fluentd will not be installed.
+  - **postgres_tag**: Tag to assign to logs coming from haproxy
+  - **node_exporter_tag** Tag to assign to logs coming from the prometheus node exporter
+  - **forward**: Configuration for the forward plugin that will talk to the external fluentd node. It has the following keys:
+    - **domain**: Ip or domain name of the remote fluentd node.
+    - **port**: Port the remote fluentd node listens on
+    - **hostname**: Unique hostname identifier for the vm
+    - **shared_key**: Secret shared key with the remote fluentd node to authentify the client
+    - **ca_cert**: CA certificate that signed the remote fluentd node's server certificate (used to authentify it)
+  - **buffer**: Configuration for the buffering of outgoing fluentd traffic
+    - **customized**: Set to false to use the default buffering configurations. If you wish to customize it, set this to true.
+    - **custom_value**: Custom buffering configuration to provide that will override the default one. Should be valid fluentd configuration syntax, including the opening and closing ```<buffer>``` tags.
 
 The following input variables are also required for postgres' certificate for tls communication:
 - **key_length**: Length of the certificate's RSA key (defaults to 4096)
