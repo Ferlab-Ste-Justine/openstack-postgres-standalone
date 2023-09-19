@@ -41,7 +41,7 @@ The module takes the following variables as input:
 - **postgres_password**: Password that will be used to access the database. If omitted, a random password is generated
 - **fluentd**: Optional fluentd configuration to securely route logs to a fluentd node using the forward plugin. It has the following keys:
   - **enabled**: If set to false (the default), fluentd will not be installed.
-  - **postgres_tag**: Tag to assign to logs coming from haproxy
+  - **postgres_tag**: Tag to assign to logs coming from postgres
   - **node_exporter_tag** Tag to assign to logs coming from the prometheus node exporter
   - **forward**: Configuration for the forward plugin that will talk to the external fluentd node. It has the following keys:
     - **domain**: Ip or domain name of the remote fluentd node.
