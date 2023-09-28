@@ -37,8 +37,8 @@ The module takes the following variables as input:
 - **postgres_params**: Additional command line parameters to pass to postgres when launching it
 - **postgres_data**: Path where to store the configuration and data files (defaults to `/data`)
 - **postgres_user**: User that will be used to access the database
-- **postgres_database**: Name of the database that will be accessed
 - **postgres_password**: Password that will be used to access the database. If omitted, a random password is generated
+- **postgres_database**: Name of the database that will be accessed
 - **fluentd**: Optional fluentd configuration to securely route logs to a fluentd node using the forward plugin. It has the following keys:
   - **enabled**: If set to false (the default), fluentd will not be installed.
   - **postgres_tag**: Tag to assign to logs coming from postgres
@@ -135,3 +135,4 @@ To reprovision a new instance with changes to the following parameters, the modu
 - postgres_user
 - postgres_password
 - postgres_database
+- fluentd
